@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -32,6 +33,8 @@ public class PayslipDemoServiceTest {
         List<Employee> employeeList = Arrays.asList(employee1, employee2);
         List<Payslip> payslips = payslipDemoService.getPayslipsByEmployees(employeeList);
         System.out.print(payslips);
+        Payslip expectedPayslip = new Payslip(employee1, "01 January", "31 January", 5004, 922, 450, 4082);
+        assertEquals(expectedPayslip, payslips.get(0));
     }
 
 }
