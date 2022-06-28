@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -33,8 +34,10 @@ public class PayslipDemoServiceTest {
         List<Employee> employeeList = Arrays.asList(employee1, employee2);
         List<Payslip> payslips = payslipDemoService.getPayslipsByEmployees(employeeList);
         System.out.print(payslips);
-        Payslip expectedPayslip = new Payslip(employee1, "01 January", "31 January", 5004, 922, 450, 4082);
-        assertEquals(expectedPayslip, payslips.get(0));
+        Payslip expectedPayslip1 = new Payslip(employee1, "01 January", "31 January", 5004, 922, 450, 4082);
+        Payslip expectedPayslip2 = new Payslip(employee2, "01 February", "28 February", 10000, 2669, 1000, 7331);
+        assertEquals(expectedPayslip1, payslips.get(0), "compare payslip 1");
+        assertEquals(expectedPayslip2, payslips.get(1), "compare payslip 2");
     }
 
 }
