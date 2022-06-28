@@ -94,3 +94,15 @@ jobs:
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
+
+    - name: Construct AWS CDK
+        working-directory: ./cdk
+        run: |
+          npm install -g aws-cdk
+          npm install
+          npm run build && cdk synth
+
+    - name: Deploy ECS Service Using CDK
+        working-directory: ./cdk
+        run: |
+          cdk deploy --require-approval never
