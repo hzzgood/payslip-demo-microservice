@@ -8,6 +8,7 @@ import * as ecsp from 'aws-cdk-lib/aws-ecs-patterns';
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
+import {Peer, Port, SecurityGroup} from "aws-cdk-lib/aws-ec2";
 
 
 export class CdkStack extends cdk.Stack {
@@ -18,8 +19,15 @@ export class CdkStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, 'ecs-cdk-vpc', {
       cidr: '10.0.0.0/16',
       natGateways: 1,
-      maxAzs: 3
+      maxAzs: 3,
     });
+
+    const securityGroup = new ec2.SecurityGroup(this, "ecs-cdk-securitygroup", {
+      vpc: vpc,
+      allowAllOutbound: true
+    })
+
+    securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(8080))
 
     // *** Create a new Cluster ***
     const clusterAdmin = new iam.Role(this, 'AdminRole', {
@@ -78,11 +86,22 @@ export class CdkStack extends cdk.Stack {
       desiredCount: 1,
       listenerPort: 80,
       assignPublicIp: true,
+      securityGroups: [securityGroup]
       // taskImageOptions: {
       //   image: ecs.ContainerImage.fromEcrRepository(ecrRepo, "latest"),
       //   containerName: 'payslip-app',
       //   containerPort: 8080
       // }
+    });
+
+    fargateService.targetGroup.configureHealthCheck({
+      port: "traffic-port",
+      path: "/actuator/health",
+      // interval: Duration.seconds(5),
+      // timeout: Duration.seconds(4),
+      // healthyThresholdCount: 2,
+      // unhealthyThresholdCount: 2,
+      healthyHttpCodes: "200"
     });
 
     const scaling = fargateService.service.autoScaleTaskCount({ maxCapacity: 6 });
