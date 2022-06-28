@@ -93,33 +93,33 @@ export class CdkStack extends cdk.Stack {
     });
 
     // *** PIPELINE CONSTRUCTS ***
-    const deployAction = new codepipeline_actions.EcsDeployAction({
-      actionName: 'DeployAction',
-      service: fargateService.service,
-      // imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
-    });
+    // const deployAction = new codepipeline_actions.EcsDeployAction({
+    //   actionName: 'DeployAction',
+    //   service: fargateService.service,
+    //   // imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
+    // });
 
     // *** PIPELINE STAGES ***
-    new codepipeline.Pipeline(this, 'MyECSPipeline', {
-      stages: [
-        // {
-        //   stageName: 'Source',
-        //   actions: [sourceAction],
-        // },
-        // {
-        //   stageName: 'Build',
-        //   actions: [buildAction],
-        // },
-        // {
-        //   stageName: 'Approve',
-        //   actions: [manualApprovalAction],
-        // },
-        {
-          stageName: 'Deploy-to-ECS',
-          actions: [deployAction],
-        }
-      ]
-    });
+    // new codepipeline.Pipeline(this, 'MyECSPipeline', {
+    //   stages: [
+    //     // {
+    //     //   stageName: 'Source',
+    //     //   actions: [sourceAction],
+    //     // },
+    //     // {
+    //     //   stageName: 'Build',
+    //     //   actions: [buildAction],
+    //     // },
+    //     // {
+    //     //   stageName: 'Approve',
+    //     //   actions: [manualApprovalAction],
+    //     // },
+    //     {
+    //       stageName: 'Deploy-to-ECS',
+    //       actions: [deployAction],
+    //     }
+    //   ]
+    // });
 
     //OUTPUT
     new cdk.CfnOutput(this, 'LoadBalancerDNS', { value: fargateService.loadBalancer.loadBalancerDnsName });
