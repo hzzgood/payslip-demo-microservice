@@ -1,0 +1,31 @@
+[
+    {
+      "taxThresholdMin": 0,
+      "taxThresholdMax": 18200,
+      "taxRate": 0,
+      "accumulatedTax": 0
+    },
+    {
+      "taxThresholdMin": 18201,
+      "taxThresholdMax": 37000,
+      "taxRate": 0.19,
+      "accumulatedTax": 0
+    },
+    {
+      "taxThresholdMin": 37001,
+      "taxThresholdMax": 87000,
+      "taxRate": 0.325,
+      "accumulatedTax": 3572
+    },
+    {
+      "taxThresholdMin": 87001,
+      "taxThresholdMax": 180000,
+      "taxRate": 0.37,
+      "accumulatedTax": 19822
+    },
+    {
+      "taxThresholdMin": 180001,
+      "taxRate": 0.45,
+      "accumulatedTax": 54232
+    }
+]

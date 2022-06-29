@@ -1,11 +1,22 @@
 package com.seismatest.payslipDemo.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.seismatest.payslipDemo.model.Payslip;
 import com.seismatest.payslipDemo.model.Employee;
+import com.seismatest.payslipDemo.model.TaxTable;
 
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
+import lombok.Value;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import org.springframework.core.io.Resource;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -41,17 +52,28 @@ public class PayslipDemoService {
         return payslip;
     }
 
+    // Get Tax Table From JSON File
+    private List<TaxTable> getTaxTableFromJson () {
+        try {
+            File taxTableFile = new ClassPathResource("/static/TaxThresholds.json").getFile();
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<TaxTable> taxTables = objectMapper.readValue(taxTableFile, new TypeReference<List<TaxTable>>(){});
+            return taxTables;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // Calculate Monthly Income By Annual Salary
     private int calculateIncomeTax (int salary) {
         double result = 0.00;
-        if (salary > 18200 && salary < 37001) {
-            result = (salary - 18200) * 0.19;
-        } else if (salary > 37000 && salary < 87001) {
-            result = (3572 + (salary - 37000) * 0.325);
-        } else if (salary > 87000 && salary < 180001) {
-            result = (19822 + (salary - 87000) * 0.37);
-        } else if (salary > 180000) {
-            result = (54232 + (salary - 180000) * 0.45);
+        List<TaxTable> taxTables = getTaxTableFromJson();
+        for (int i = 0; i < taxTables.size(); i++) {
+            TaxTable currentTable = taxTables.get(i);
+            if (salary >= currentTable.getTaxThresholdMin() && (salary <= currentTable.getTaxThresholdMax() || currentTable.getTaxThresholdMax() == 0)) {
+                result = currentTable.getAccumulatedTax() + (salary - currentTable.getTaxThresholdMin() + 1) * currentTable.getTaxRate();
+                break;
+            }
         }
         return (int) Math.round(result / 12);
     }
