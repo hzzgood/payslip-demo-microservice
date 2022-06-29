@@ -25,11 +25,6 @@ public class PayslipDemoController {
     @Autowired
     private PayslipDemoService payslipDemoService;
 
-    @GetMapping(value = "/data")
-    public String getDemoData() {
-        return "Demo Data";
-    }
-
     @PostMapping(value = "/payslips", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getPayslips(@RequestBody @NotEmpty List<@Valid Employee> inputs) {
 //        System.out.print(payslipDemoService.getPayslipsByEmployees(inputs));

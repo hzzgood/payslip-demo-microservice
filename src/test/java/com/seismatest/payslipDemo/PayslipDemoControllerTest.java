@@ -6,25 +6,22 @@ import com.seismatest.payslipDemo.service.PayslipDemoService;
 import com.seismatest.payslipDemo.model.Payslip;
 
 import org.junit.jupiter.api.Test;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.Arrays;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -39,7 +36,7 @@ public class PayslipDemoControllerTest {
     private PayslipDemoService payslipDemoService;
 
     @Test
-    public void testGetPayslipController() {
+    public void testGetPayslipController() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         Employee employee1 = new Employee("David", "Rudd", 60050, 1, 0.09);
@@ -47,9 +44,11 @@ public class PayslipDemoControllerTest {
         List<Employee> employeeList = Arrays.asList(employee1, employee2);
         ResponseEntity<Payslip> responseEntity = payslipDemoController.getPayslips(employeeList);
         System.out.print(responseEntity);
-//        assertThat(responseEntity.getStatusCodeValue() == 200);
-//        System.out.print(responseEntity);
-//        System.out.print(responseEntity.getBody());
+        Payslip expectedPayslip1 = new Payslip(employee1, "01 January", "31 January", 5004, 922, 450, 4082);
+        Payslip expectedPayslip2 = new Payslip(employee2, "01 February", "28 February", 10000, 2669, 1000, 7331);
+        List<Payslip> expectedPayslips = Arrays.asList(expectedPayslip1, expectedPayslip2);
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(expectedPayslips, responseEntity.getBody());
     }
 
 }

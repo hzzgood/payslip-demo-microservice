@@ -3,21 +3,15 @@ package com.seismatest.payslipDemo.service;
 import com.seismatest.payslipDemo.model.Payslip;
 import com.seismatest.payslipDemo.model.Employee;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.swing.text.DateFormatter;
-import java.text.DateFormat;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.time.Period;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
-import java.util.Calendar;
 
 @NoArgsConstructor
 @Service
